@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Expr\Assign;
 
 class AuthController extends Controller
 {
@@ -14,10 +15,12 @@ class AuthController extends Controller
         $fields = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users',
+            'role' => 'required',
             'password' => 'required|confirmed'
         ]);
 
         $user = User::create($fields);
+        $user->assignRole($fields['role']);
 
         $token = $user->createToken($request->name);
 

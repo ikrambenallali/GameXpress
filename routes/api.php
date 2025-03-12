@@ -11,13 +11,17 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/test',function(){
+Route::get('/test', function () {
     return 'Hello World';
 });
 Route::prefix('v1/admin')->group(function () {
-    Route::post('/register', [authController::class , 'register']);
+    Route::post('/register', [authController::class, 'register']);
     Route::post('/login', [authController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');});
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+});
 
-
-
+Route::middleware(['role:super_admin', 'auth:sanctum'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return 'Yes, you can see this page';
+    });
+});

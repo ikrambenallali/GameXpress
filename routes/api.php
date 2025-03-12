@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\Admin\AuthController;
+use App\Http\Controllers\Api\V1\Admin\CategoryController;
 use App\Http\Controllers\Api\V1\Admin\dashboardController;
 
 Route::get('/user', function (Request $request) {
@@ -27,5 +28,6 @@ Route::middleware(['role:super_admin', 'auth:sanctum'])->group(function () {
 Route::middleware(['role:super_admin', 'auth:sanctum'])->group(function () {
     Route::prefix('v1/admin')->group(function () {
         Route::get('/dashboard', [dashboardController::class, 'statistique']);
+        Route::post('/category', [CategoryController::class, 'store']);
     });
 });

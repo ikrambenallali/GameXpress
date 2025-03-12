@@ -11,6 +11,7 @@ use App\Models\ProductImage;
 class Product extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $table = 'produits';
 
     protected $fillable = ['name', 'slug', 'price', 'stock', 'status', 'category_id'];
     public function category()

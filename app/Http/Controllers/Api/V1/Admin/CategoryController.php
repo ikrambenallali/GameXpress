@@ -43,13 +43,11 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        // Validation des données de la requête
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255'],
         ]);
     
-        // Mise à jour de la catégorie
         $category->update([
            'user_id' => Auth::id(),
             'name' => $validatedData['name'],
@@ -62,8 +60,9 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return response()->json(['message' => 'Catégorie supprimer avec succès']);
     }
 }

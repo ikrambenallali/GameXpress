@@ -30,5 +30,6 @@ Route::middleware(['role:super_admin', 'auth:sanctum'])->group(function () {
         Route::get('/dashboard', [dashboardController::class, 'statistique']);
         Route::post('/category', [CategoryController::class, 'store']);
         Route::put('/category/{category}', [CategoryController::class, 'update']);
+        Route::delete('/category/{category}', [CategoryController::class, 'destroy']);
     });
 });

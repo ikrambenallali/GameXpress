@@ -14,7 +14,8 @@ class ProductController extends Controller
 {
     public function index()
     {
-        //
+        $products = Product::all();
+        return response()->json($products);
     }
 
     /**
@@ -22,6 +23,15 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'primary_image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048'
+        ]);
+
         $product = Product::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
@@ -30,7 +40,25 @@ class ProductController extends Controller
             'status' => $request->status,
             'category_id' => $request->category_id,
         ]);
-        return response()->json($product);
+        $primaryImagePath = $request->file('primary_image')->store('products', 'public');
+        $product->images()->create([
+            'image_url' => $primaryImagePath,
+            'is_primary' => true
+        ]);
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imagePath = $image->store('products', 'public');
+                $product->images()->create([
+                    'image_url' => $imagePath,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Product created successfully',
+            'product' => $product->load('images')
+        ], 201);
     }
 
     /**
@@ -48,19 +76,18 @@ class ProductController extends Controller
     {
         $validatedData = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255'], // Le slug peut être généré automatiquement
+            'slug' => ['nullable', 'string', 'max:255'], 
             'price' => ['required', 'numeric', 'min:0'],
 
             'stock' => ['required', 'integer', 'min:0'],
-            'status' => ['required', 'string', 'in:disponible,en rupture'], // ✅ Correct
-            'category_id' => ['required', 'exists:categories,id'], // Vérifie que l'ID de la catégorie existe dans la BDD
+            'status' => ['required', 'string', 'in:disponible,en rupture'], 
+            'category_id' => ['required', 'exists:categories,id'], 
         ]);
     
-        // 🔹 Mise à jour du produit
         $product->update([
             'user_id' => Auth::id(),
             'name' => $validatedData['name'],
-            'slug' => $validatedData['slug'] ?? Str::slug($validatedData['name']), // Si slug n'est pas fourni, on le génère
+            'slug' => $validatedData['slug'] ?? Str::slug($validatedData['name']), 
             'price' => $validatedData['price'],
             'stock' => $validatedData['stock'],
             'status' => $validatedData['status'],

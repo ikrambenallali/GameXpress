@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -40,16 +41,28 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255'],
+        ]);
+    
+        $category->update([
+           'user_id' => Auth::id(),
+            'name' => $validatedData['name'],
+            'slug' => $validatedData['slug'],
+        ]);
+    
+        return response()->json(['message' => 'Catégorie mise à jour avec succès']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return response()->json(['message' => 'Catégorie supprimer avec succès']);
     }
 }

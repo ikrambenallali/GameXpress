@@ -30,18 +30,18 @@ Route::middleware(['role:super_admin', 'auth:sanctum'])->group(function () {
 });
 Route::middleware(['role:super_admin', 'auth:sanctum'])->group(function () {
     Route::prefix('v1/admin')->group(function () {
-    Route::get('/dashboard', [dashboardController::class, 'statistique']);
+        Route::get('/dashboard', [dashboardController::class, 'statistique']);
     });
 });
-Route::middleware(['role:product_manager', 'auth:sanctum'])->group(function () {
+Route::middleware(['role:product_manager|super_admin', 'auth:sanctum'])->group(function () {
     Route::prefix('v1/admin')->group(function () {
         Route::post('/product', [ProductController::class, 'store'])->name('products.store');
         Route::put('/product/{product}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/product/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
         Route::get('/Allproduct', [ProductController::class, 'index'])->name('product.index');
-        Route::post('/category', [CategoryController::class, 'store']);
-        Route::put('/category/{category}', [CategoryController::class, 'update']);
-        Route::delete('/category/{category}', [CategoryController::class, 'destroy']);
-        Route::get('/Allcategory', [CategoryController::class, 'index']);
+        Route::post('/category', [CategoryController::class, 'store'])->name('category.store');
+        Route::put('/category/{category}', [CategoryController::class, 'update'])->name('category.update');
+        Route::delete('/category/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
+        Route::get('/Allcategory', [CategoryController::class, 'index'])->name('category.index');
     });
 });

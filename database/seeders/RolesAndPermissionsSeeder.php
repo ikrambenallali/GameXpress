@@ -16,13 +16,22 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run()
     {
-      
-        
+
+
         $permissions = [
             'view_dashboard',
-            'view_products', 'create_products', 'edit_products', 'delete_products',
-            'view_categories', 'create_categories', 'edit_categories', 'delete_categories',
-            'view_users', 'create_users', 'edit_users', 'delete_users',
+            'view_products',
+            'create_products',
+            'edit_products',
+            'delete_products',
+            'view_categories',
+            'create_categories',
+            'edit_categories',
+            'delete_categories',
+            'view_users',
+            'create_users',
+            'edit_users',
+            'delete_users',
         ];
 
         foreach ($permissions as $permission) {
@@ -35,14 +44,22 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $superAdmin->givePermissionTo($permissions);
         $productManager->givePermissionTo([
-            'view_products', 'create_products', 'edit_products', 'delete_products',
-            'view_categories', 'create_categories', 'edit_categories', 'delete_categories',
+            'view_products',
+            'create_products',
+            'edit_products',
+            'delete_products',
+            'view_categories',
+            'create_categories',
+            'edit_categories',
+            'delete_categories',
         ]);
         $userManager->givePermissionTo([
-            'view_users', 'create_users', 'edit_users', 'delete_users',
+            'view_users',
+            'create_users',
+            'edit_users',
+            'delete_users',
         ]);
-        $user = User::find(1);
-        $user->assignRole('super_admin');
+        // $user = User::find(1);
+        // $user->assignRole('super_admin');
     }
 }
-

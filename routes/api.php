@@ -6,8 +6,7 @@ use App\Http\Controllers\Api\V1\Admin\AuthController;
 use App\Http\Controllers\Api\V1\Admin\CategoryController;
 use App\Http\Controllers\Api\V1\Admin\dashboardController;
 use App\Http\Controllers\Api\V1\Admin\ProductController;
-
-
+use App\Http\Controllers\UserController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -31,6 +30,10 @@ Route::middleware(['role:super_admin', 'auth:sanctum'])->group(function () {
 Route::middleware(['role:super_admin', 'auth:sanctum'])->group(function () {
     Route::prefix('v1/admin')->group(function () {
         Route::get('/dashboard', [dashboardController::class, 'statistique']);
+        Route::get('AllUsers',[UserController::class,'index'])->name('users.index');
+        Route::post('users',[UserController::class,'store'])->name('users.store');
+
+
     });
 });
 Route::middleware(['role:product_manager|super_admin', 'auth:sanctum'])->group(function () {
@@ -43,5 +46,16 @@ Route::middleware(['role:product_manager|super_admin', 'auth:sanctum'])->group(f
         Route::put('/category/{category}', [CategoryController::class, 'update'])->name('category.update');
         Route::delete('/category/{category}', [CategoryController::class, 'destroy'])->name('category.destroy');
         Route::get('/Allcategory', [CategoryController::class, 'index'])->name('category.index');
+    });
+});
+Route::middleware(['role:user_manager|super_admin'])->group(function () {
+    Route::prefix('v1/admin')->group(function () {
+        Route::get('AllUsers',[UserController::class,'index'])->name('users.index');
+        Route::post('users',[UserController::class,'store'])->name('users.store');
+        Route::put('users',[UserController::class,'update'])->name('users.update');
+        Route::delete('users',[UserController::class,'destroy'])->name('users.destroy');
+        
+        
+
     });
 });

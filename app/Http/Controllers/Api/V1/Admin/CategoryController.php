@@ -16,7 +16,12 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::all();
-        return response()->json($categories);
+        return response()->json(
+            [
+                "status" => "success",
+                "categories" => $categories
+            ]
+        );
     }
 
     /**
@@ -28,8 +33,10 @@ class CategoryController extends Controller
             'name' => $request->name,
             'slug' => Str::slug($request->name),
         ]);    
-        return response()->json($category);
-    }
+        return response()->json([
+            'message' => 'Catégorie créée avec succès', // Remplace "status"
+            'category' => $category // Remplace "categories"
+        ], 200);  }
 
     /**
      * Display the specified resource.
@@ -55,8 +62,12 @@ class CategoryController extends Controller
             'slug' => $validatedData['slug'],
         ]);
     
-        return response()->json(['message' => 'Catégorie mise à jour avec succès']);
-    }
+        return response()->json(
+            [
+                'message' => 'Catégorie créée avec succès', // Remplace "status"
+                "categories" => $category
+            ]
+        );    }
 
     /**
      * Remove the specified resource from storage.
@@ -64,6 +75,13 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return response()->json(['message' => 'Catégorie supprimer avec succès']);
-    }
+        return response()->json(
+            [
+                'message' => 'category deleted successfully', // Remplace "status"
+                "categories" => $category
+            ]
+        );   
+     }
+     
+     
 }

@@ -36,7 +36,8 @@ class CategoryController extends Controller
         return response()->json([
             'message' => 'Catégorie créée avec succès', // Remplace "status"
             'category' => $category // Remplace "categories"
-        ], 200);  }
+        ], 200); 
+     }
 
     /**
      * Display the specified resource.

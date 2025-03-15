@@ -52,7 +52,7 @@ Route::middleware(['role:user_manager|super_admin'])->group(function () {
     Route::prefix('v1/admin')->group(function () {
         Route::get('AllUsers',[UserController::class,'index'])->name('users.index');
         Route::post('users',[UserController::class,'store'])->name('users.store');
-        Route::put('users',[UserController::class,'update'])->name('users.update');
+        Route::put('users/{user}',[UserController::class,'update'])->name('users.update');
         Route::delete('users',[UserController::class,'destroy'])->name('users.destroy');
         
         
